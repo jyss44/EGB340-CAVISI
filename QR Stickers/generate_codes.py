@@ -31,7 +31,7 @@ Returns tag formatted as <name>Name<\name><price>price<\price>
 def item2tag(item):
     name = item[0]
     price = item[1]
-    tag = '<name>' + name + '<\name>' + '<price>' + price2str(price) + '<\price>'
+    tag = name #'<name>' + name + '<\name>' + '<price>' + price2str(price) + '<\price>'
     return tag
 
 """

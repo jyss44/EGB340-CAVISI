@@ -40,7 +40,7 @@ while True:
         print ("I quit!")
         break
 
-    #time.sleep(0.5) # Pause to let the shell catch up
+    # time.sleep(0.5) # Pause to let the shell catch up
 
 # When everything done, release the capture
 cap.release()
