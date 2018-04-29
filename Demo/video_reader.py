@@ -1,13 +1,11 @@
 import cv2
 import qr_extractor as reader
 import qrtools
-import os
-import time
-
-cap = cv2.VideoCapture(0)
 
 """
 Decodes a list of QR images
+Takes an array of QR images
+Returns False if input array is empty
 """
 def decodeImages(images):
     if not images:
@@ -22,13 +20,22 @@ def decodeImages(images):
     else:
         return False
 
+"""
+Clears terminal by printing out several empty lines
+"""
 def cls():
     print("\n" * 20)
 
 # Main loop
+
+# Constants
 count = 0
 threshold = 24
 clearScreen = False
+
+# Aquire webcam capture
+webcamID = 1 # 0 for build in webcam, 1 for USB webcam
+cap = cv2.VideoCapture(1)
 
 while True:
     count = count + 1
@@ -53,8 +60,6 @@ while True:
     if cv2.waitKey(1) & 0xFF == ord('q'):
         print ("I quit!")
         break
-
-    # time.sleep(0.5) # Pause to let the shell catch up
 
 # When everything done, release the capture
 cap.release()

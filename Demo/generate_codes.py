@@ -1,6 +1,6 @@
 import pyqrcode
 import qrtools
-from scipy import misc
+
 """
 Generates QR codes based on a list of item names and prices.
 QR Codes saved to current directory as png files.
