@@ -22,20 +22,34 @@ def decodeImages(images):
     else:
         return False
 
-def clearScreen():
+def cls():
     print("\n" * 20)
 
 # Main loop
+count = 0
+threshold = 24
+clearScreen = False
+
 while True:
-    clearScreen()
+    count = count + 1
+
     _, frame = cap.read() # Read frame from webcam
     codes, frame = reader.extract(frame, True) # Extract QR codes from
-    cv2.imshow("frame", frame)
+    cv2.imshow("frame", frame) # Display
 
     labels = decodeImages(codes)
 
-    print(labels)
+    # Display data
+    if count > threshold:
+        if clearScreen:
+            cls()
+            clearScreen = False
+        else:
+            print(labels)
+            clearScreen = True
+        count = 0
 
+    # Quit loop if requested
     if cv2.waitKey(1) & 0xFF == ord('q'):
         print ("I quit!")
         break
