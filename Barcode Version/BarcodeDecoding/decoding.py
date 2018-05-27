@@ -1,6 +1,7 @@
 from __future__ import print_function
 import pyzbar.pyzbar as pyzbar
 import cv2
+import math
 
 def cls():
     '''
@@ -16,6 +17,27 @@ def decodeImage(image):
         data.append(codes[i].data)
     return data
 
+def verifyCode(code):
+    codeStr = str(code)
+    length = len(codeStr)
+    codeStr = codeStr[2:length-1]
+
+    if len(codeStr) == 13:
+        sumEven = sumEvens(codeStr)
+        print(sumEven)
+
+def sumEvens(numStr):
+    length = len(numStr)
+    sum = 0
+
+    for i in range(math.floor(length)):
+
+        sum = sum + int(numStr[i])
+
+    return sum
+
+    print(codeStr)
+
 image = cv2.imread('barcode_01.jpg')
 
 code = decodeImage(image)
@@ -23,8 +45,10 @@ code = decodeImage(image)
 print(code[0])
 
 code = pyzbar.decode(image)
-print(code)
+print('Number:', code[0].data)
+print('Barcode Type:', code[0].type)
 
+verifyCode(code[0].data)
 # # Main loop
 # cap = cv2.VideoCapture(0)
 # count = 0

@@ -1,6 +1,7 @@
 import cv2
 from BarcodeDetection import IdentifyBarcode
 import pyzbar.pyzbar as pyzbar
+from pyzbar.pyzbar import ZBarSymbol
 
 def cls():
     '''
@@ -10,11 +11,13 @@ def cls():
 
 def decodeImage(image):
     data = []
+    type = []
     codes = pyzbar.decode(image)
 
     for i in range(len(codes)):
         data.append(codes[i].data)
-    return data
+        type.append(codes[i].type)
+    return data, type
 
 # Main loop
 cap = cv2.VideoCapture(0)
@@ -35,7 +38,7 @@ while True:
 
     # Display data
     if count > threshold:
-        codes = decodeImage(frame)
+        codes, types = decodeImage(frame)
         print(str(len(codes)) + ' codes detected')
 
         if clearScreen:
@@ -44,6 +47,7 @@ while True:
         else:
             if len(codes) > 0:
                 print(codes)
+                print(types)
             clearScreen = True
         count = 0
 
