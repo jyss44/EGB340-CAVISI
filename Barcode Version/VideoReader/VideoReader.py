@@ -2,6 +2,7 @@ import cv2
 from BarcodeDetection import IdentifyBarcode
 import pyzbar.pyzbar as pyzbar
 from pyzbar.pyzbar import ZBarSymbol
+import math
 
 def cls():
     '''
@@ -11,13 +12,52 @@ def cls():
 
 def decodeImage(image):
     data = []
-    type = []
     codes = pyzbar.decode(image)
 
     for i in range(len(codes)):
-        data.append(codes[i].data)
-        type.append(codes[i].type)
-    return data, type
+        if verifyCode(codes[i].data):
+            data.append(codes[i].data)
+    return data
+
+def verifyCode(code):
+    codeStr = str(code)
+    length = len(codeStr)
+    checkDigit = int(codeStr[length-2])
+    codeStr = codeStr[2:length-1]
+
+    if len(codeStr) == 13:
+        sumEven = sumEvens(codeStr) * 3
+        sumOdd = sumOdds(codeStr)
+
+        total = (sumEven + sumOdd) % 10
+
+        if (checkDigit + total) % 10 == 0:
+            return True
+        else:
+            return False
+    else:
+        return False
+
+
+def sumEvens(numStr):
+    length = len(numStr)
+    sum = 0
+
+    for i in range(0, math.floor(length/2)):
+        index = i * 2 + 1
+        sum = sum + int(numStr[index])
+
+    return sum
+
+def sumOdds(numStr):
+    length = len(numStr)
+    sum = 0
+
+    for i in range(0, math.floor(length / 2)):
+        index = i * 2
+        sum = sum + int(numStr[index])
+
+    return sum
 
 # Main loop
 cap = cv2.VideoCapture(0)
@@ -38,7 +78,7 @@ while True:
 
     # Display data
     if count > threshold:
-        codes, types = decodeImage(frame)
+        codes = decodeImage(frame)
         print(str(len(codes)) + ' codes detected')
 
         if clearScreen:
@@ -47,7 +87,6 @@ while True:
         else:
             if len(codes) > 0:
                 print(codes)
-                print(types)
             clearScreen = True
         count = 0
 

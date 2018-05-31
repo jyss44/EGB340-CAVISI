@@ -14,29 +14,49 @@ def decodeImage(image):
     codes = pyzbar.decode(image)
 
     for i in range(len(codes)):
-        data.append(codes[i].data)
+        if verifyCode(codes[i].data):
+            data.append(codes[i].data)
     return data
 
 def verifyCode(code):
     codeStr = str(code)
     length = len(codeStr)
+    checkDigit = int(codeStr[length-2])
     codeStr = codeStr[2:length-1]
 
     if len(codeStr) == 13:
-        sumEven = sumEvens(codeStr)
-        print(sumEven)
+        sumEven = sumEvens(codeStr) * 3
+        sumOdd = sumOdds(codeStr)
+
+        total = (sumEven + sumOdd) % 10
+
+        if (checkDigit + total) % 10 == 0:
+            return True
+        else:
+            return False
+    else:
+        return False
+
 
 def sumEvens(numStr):
     length = len(numStr)
     sum = 0
 
-    for i in range(math.floor(length)):
-
-        sum = sum + int(numStr[i])
+    for i in range(0, math.floor(length/2)):
+        index = i * 2 + 1
+        sum = sum + int(numStr[index])
 
     return sum
 
-    print(codeStr)
+def sumOdds(numStr):
+    length = len(numStr)
+    sum = 0
+
+    for i in range(0, math.floor(length / 2)):
+        index = i * 2
+        sum = sum + int(numStr[index])
+
+    return sum
 
 image = cv2.imread('barcode_01.jpg')
 
@@ -48,7 +68,7 @@ code = pyzbar.decode(image)
 print('Number:', code[0].data)
 print('Barcode Type:', code[0].type)
 
-verifyCode(code[0].data)
+print(verifyCode(code[0].data))
 # # Main loop
 # cap = cv2.VideoCapture(0)
 # count = 0
